@@ -1,13 +1,74 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>inicio</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>UrbanInspect</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">inicio</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <ion-button expand="block" size="large" (click)="nueva()">
+    <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+    Registrar incidencia
+  </ion-button>
+
+  @if (loading()) {
+    <div class="centrado"><ion-spinner></ion-spinner></div>
+  } @else if (error()) {
+    <div class="centrado">
+      <ion-text color="danger"><p>{{ error() }}</p></ion-text>
+      <ion-button fill="outline" (click)="ionViewWillEnter()">Reintentar</ion-button>
+    </div>
+  } @else {
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-card (click)="ir('incidencias')">
+            <ion-card-header>
+              <ion-card-subtitle>Total</ion-card-subtitle>
+              <ion-card-title>{{ total() }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size="6">
+          <ion-card color="danger">
+            <ion-card-header>
+              <ion-card-subtitle>Alta prioridad abiertas</ion-card-subtitle>
+              <ion-card-title>{{ altaAbiertas() }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card color="warning">
+            <ion-card-header>
+              <ion-card-subtitle>Pendientes</ion-card-subtitle>
+              <ion-card-title>{{ pendientes() }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card color="primary">
+            <ion-card-header>
+              <ion-card-subtitle>En proceso</ion-card-subtitle>
+              <ion-card-title>{{ enProceso() }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size="4">
+          <ion-card color="success">
+            <ion-card-header>
+              <ion-card-subtitle>Resueltas</ion-card-subtitle>
+              <ion-card-title>{{ resueltas() }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+        <ion-col size="12">
+          <ion-card (click)="ir('seguimiento')">
+            <ion-card-header>
+              <ion-card-subtitle>En mi seguimiento (este dispositivo)</ion-card-subtitle>
+              <ion-card-title>{{ enSeguimiento() }}</ion-card-title>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  }
 </ion-content>

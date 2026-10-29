@@ -1,13 +1,135 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>nueva</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/inicio"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Nueva incidencia</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="descartarFormulario()" aria-label="Descartar">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">nueva</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <!-- R5: datos -->
+    <ion-list>
+      <ion-list-header><ion-label>Datos</ion-label></ion-list-header>
+      <ion-item>
+        <ion-select formControlName="tipo" label="Tipo *" labelPlacement="stacked"
+                    placeholder="Selecciona" interface="action-sheet" cancelText="Cancelar">
+          @for (t of tipos; track t.value) {
+            <ion-select-option [value]="t.value">{{ t.label }}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-textarea formControlName="descripcion" label="Descripción *" labelPlacement="stacked"
+                      [autoGrow]="true" placeholder="Qué se observa (mín. 10 caracteres)"
+                      errorText="Mínimo 10 caracteres"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="direccion" label="Dirección *" labelPlacement="stacked"
+                   placeholder="Av. 10 de Agosto y Colón" errorText="Obligatoria"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="sector" label="Sector *" labelPlacement="stacked"
+                   placeholder="La Mariscal" errorText="Obligatorio"></ion-input>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label>Prioridad *</ion-label>
+      </ion-item>
+      <ion-segment formControlName="prioridad" class="ion-padding-horizontal">
+        <ion-segment-button value="baja"><ion-label>Baja</ion-label></ion-segment-button>
+        <ion-segment-button value="media"><ion-label>Media</ion-label></ion-segment-button>
+        <ion-segment-button value="alta"><ion-label>Alta</ion-label></ion-segment-button>
+      </ion-segment>
+    </ion-list>
+
+    <!-- R6: foto -->
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Fotografía {{ esAlta() ? '(obligatoria por prioridad alta)' : '(opcional)' }}</ion-label>
+      </ion-list-header>
+      @if (fotoPath()) {
+        <img [src]="fotoPath()" alt="Vista previa" style="width: 100%; max-height: 280px; object-fit: cover" />
+        <div class="ion-padding-horizontal" style="display: flex; gap: 8px">
+          <ion-button fill="outline" (click)="tomarFoto()" style="flex: 1">Repetir</ion-button>
+          <ion-button fill="outline" color="danger" (click)="quitarFoto()" style="flex: 1">Quitar</ion-button>
+        </div>
+      } @else {
+        <div class="ion-padding-horizontal">
+          <ion-button expand="block" (click)="tomarFoto()">
+            <ion-icon slot="start" name="camera-outline"></ion-icon> Tomar foto
+          </ion-button>
+        </div>
+      }
+      @if (fotoAviso()) {
+        <ion-text color="danger"><p class="ion-padding-horizontal">{{ fotoAviso() }}</p></ion-text>
+      }
+    </ion-list>
+
+    <!-- R7: ubicación -->
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Ubicación {{ esBache() ? '(obligatoria para baches)' : '(opcional)' }}</ion-label>
+      </ion-list-header>
+      <div class="ion-padding-horizontal">
+        <ion-button expand="block" fill="outline" [disabled]="buscandoGps()" (click)="usarGps()">
+          <ion-icon slot="start" name="locate-outline"></ion-icon>
+          {{ buscandoGps() ? 'Buscando GPS…' : 'Usar mi ubicación (GPS)' }}
+        </ion-button>
+      </div>
+      @if (ubicacionAviso()) {
+        <ion-text color="danger"><p class="ion-padding-horizontal">{{ ubicacionAviso() }}</p></ion-text>
+      }
+      <ion-item>
+        <ion-input formControlName="lat" type="number" inputmode="decimal" label="Latitud"
+                   labelPlacement="stacked" placeholder="-0.180653"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input formControlName="lng" type="number" inputmode="decimal" label="Longitud"
+                   labelPlacement="stacked" placeholder="-78.467834"></ion-input>
+      </ion-item>
+      <div class="ion-padding-horizontal">
+        <ion-button expand="block" fill="clear" (click)="consultarClima()">Consultar clima con estas coordenadas</ion-button>
+      </div>
+    </ion-list>
+
+    <!-- R4: clima -->
+    @if (climaCargando()) {
+      <div class="centrado"><ion-spinner></ion-spinner><p>Consultando clima…</p></div>
+    } @else if (clima(); as c) {
+      <ion-card [color]="c.advertenciaLluvia ? 'warning' : 'light'">
+        <ion-card-content>
+          <h2><strong>{{ c.temperatura }} °C</strong> · {{ c.descripcion }}</h2>
+          <p>Precipitación última hora: <strong>{{ c.precipitacionUltimaHora }} mm</strong></p>
+          @if (c.advertenciaLluvia) {
+            <p><ion-icon name="rainy-outline"></ion-icon>
+              Más de 5 mm en la última hora: las condiciones podrían dificultar el mantenimiento.</p>
+          }
+          <ion-note>Fuente: Open-Meteo</ion-note>
+        </ion-card-content>
+      </ion-card>
+    } @else if (climaError()) {
+      <ion-text color="danger"><p class="ion-padding-horizontal">{{ climaError() }}</p></ion-text>
+    }
+
+    @if (errores().length) {
+      <ion-card color="danger">
+        <ion-card-content>
+          @for (e of errores(); track e) { <p>• {{ e }}</p> }
+        </ion-card-content>
+      </ion-card>
+    }
+
+    <div class="ion-padding">
+      <ion-button expand="block" size="large" type="submit" [disabled]="guardando()">
+        <ion-icon slot="start" name="checkmark-circle-outline"></ion-icon>
+        {{ guardando() ? 'Guardando…' : 'Guardar incidencia' }}
+      </ion-button>
+    </div>
+  </form>
 </ion-content>

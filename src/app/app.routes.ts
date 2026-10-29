@@ -25,7 +25,6 @@ export const routes: Routes = [
   },
   // Pantallas fuera de las pestañas (se abren encima, con botón atrás)
   {
-    // TU TURNO (B2): parámetro de ruta con el id de MockAPI
     path: 'incidencia/:id',
     loadComponent: () => import('./pages/detalle/detalle.page').then((m) => m.DetallePage),
   },

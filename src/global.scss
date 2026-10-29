@@ -35,3 +35,27 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+/* Interfaz para trabajo en campo: texto y botones más grandes, alto contraste (R10) */
+:root {
+  --ion-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+ion-button {
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  min-height: 48px;
+  font-weight: 600;
+}
+ion-item {
+  --min-height: 52px;
+}
+.estado-pendiente { --background: var(--ion-color-warning); --color: #000; }
+.estado-en_proceso { --background: var(--ion-color-primary); --color: #fff; }
+.estado-resuelta { --background: var(--ion-color-success); --color: #fff; }
+.centrado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 16px;
+}

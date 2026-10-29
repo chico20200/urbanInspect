@@ -1,13 +1,88 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>detalle</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/incidencias"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ incidencia()?.codigo ?? 'Detalle' }}</ion-title>
+    @if (incidencia(); as i) {
+      <ion-buttons slot="end">
+        <ion-button (click)="alternarSeguimiento()" aria-label="Seguimiento">
+          <ion-icon slot="icon-only" [name]="seguimiento.estaMarcada(i.id) ? 'bookmark' : 'bookmark-outline'"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    }
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">detalle</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  @if (loading()) {
+    <div class="centrado"><ion-spinner></ion-spinner></div>
+  } @else if (error()) {
+    <div class="centrado">
+      <ion-text color="danger"><p>{{ error() }}</p></ion-text>
+      <ion-button (click)="cargar()">Reintentar</ion-button>
+    </div>
+  } @else if (incidencia(); as i) {
+    @if (i.fotoUrl) {
+      <img [src]="i.fotoUrl" [alt]="'Foto de ' + i.codigo" style="width: 100%; max-height: 320px; object-fit: cover" />
+    }
+
+    <ion-list>
+      <ion-item>
+        <ion-label>Estado</ion-label>
+        <ion-badge [class]="'estado-' + i.estado">{{ estadoLabel[i.estado] }}</ion-badge>
+      </ion-item>
+      <ion-item><ion-label><p>Tipo</p><h2>{{ tipo(i.tipo) }}</h2></ion-label></ion-item>
+      <ion-item><ion-label class="ion-text-wrap"><p>Descripción</p><h2>{{ i.descripcion }}</h2></ion-label></ion-item>
+      <ion-item><ion-label class="ion-text-wrap"><p>Dirección · Sector</p><h2>{{ i.direccion }} · {{ i.sector }}</h2></ion-label></ion-item>
+      <ion-item><ion-label><p>Prioridad</p><h2>{{ i.prioridad }}</h2></ion-label></ion-item>
+      <ion-item><ion-label><p>Fecha</p><h2>{{ i.fecha | date: 'dd/MM/yyyy HH:mm' }}</h2></ion-label></ion-item>
+      @if (i.lat !== null && i.lng !== null) {
+        <ion-item><ion-label><p>Coordenadas</p><h2>{{ i.lat }}, {{ i.lng }}</h2></ion-label></ion-item>
+      }
+      @if (i.climaTemperatura !== null) {
+        <ion-item>
+          <ion-label class="ion-text-wrap">
+            <p>Clima al registrar</p>
+            <h2>{{ i.climaTemperatura }} °C · {{ i.climaPrecipitacion }} mm/h · {{ i.climaDescripcion }}</h2>
+          </ion-label>
+        </ion-item>
+      }
+      @if (i.observacion) {
+        <ion-item><ion-label class="ion-text-wrap"><p>Observación</p><h2>{{ i.observacion }}</h2></ion-label></ion-item>
+      }
+    </ion-list>
+
+    <!-- R9: cambio de estado -->
+    @if (opciones().length > 0) {
+      <ion-list>
+        <ion-item>
+          <ion-select label="Cambiar estado a" labelPlacement="stacked" placeholder="Elige el nuevo estado"
+                      [(ngModel)]="nuevoEstado" interface="action-sheet" cancelText="Cancelar">
+            @for (e of opciones(); track e) {
+              <ion-select-option [value]="e">{{ estadoLabel[e] }}</ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        @if (nuevoEstado === 'resuelta') {
+          <ion-item>
+            <ion-textarea label="Observación (obligatoria)" labelPlacement="stacked" [autoGrow]="true"
+                          placeholder="¿Qué se hizo para resolverla?" [(ngModel)]="observacion"></ion-textarea>
+          </ion-item>
+        }
+      </ion-list>
+      @if (errorEstado()) {
+        <ion-text color="danger"><p class="ion-padding-horizontal">{{ errorEstado() }}</p></ion-text>
+      }
+      <div class="ion-padding">
+        <ion-button expand="block" [disabled]="!nuevoEstado || guardando()" (click)="cambiarEstado()">
+          {{ guardando() ? 'Guardando…' : 'Guardar cambio de estado' }}
+        </ion-button>
+      </div>
+    } @else {
+      <ion-note class="ion-padding" style="display: block">
+        Esta incidencia está resuelta: ya no puede cambiar de estado.
+      </ion-note>
+    }
+  }
 </ion-content>

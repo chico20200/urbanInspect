@@ -1,7 +1,10 @@
-// Uso:  node seed/seed-incidencias.mjs https://TU_ID.mockapi.io/api/v1   (Node 18+)
+// Carga datos de prueba en MockAPI (requisito de la prueba: 3+ páginas, 3 estados, varios tipos/prioridades).
+// Uso:  node seed/seed-incidencias.mjs https://TU_ID.mockapi.io/api/v1
+// Requiere Node 18 o superior (trae fetch incorporado).
+
 const base = process.argv[2];
 if (!base) {
-  console.error('Falta la URL. Ejemplo: node seed/seed-incidencias.mjs https://6ae35f7f933120ae20f8b756.mockapi.io/api/v1');
+  console.error('Falta la URL. Ejemplo: node seed/seed-incidencias.mjs https://TU_ID.mockapi.io/api/v1');
   process.exit(1);
 }
 
@@ -33,10 +36,20 @@ for (let n = 1; n <= total; n++) {
   const fecha = new Date(Date.now() - n * 36e5 * 7).toISOString(); // cada 7 horas hacia atrás
   const body = {
     codigo: `INC-SEED${String(n).padStart(2, '0')}`,
-    tipo, descripcion: `${descripciones[tipo]} (#${n})`, direccion, sector, fecha, estado, prioridad,
-    fotoUrl: null, lat, lng,
+    tipo,
+    descripcion: `${descripciones[tipo]} (#${n})`,
+    direccion,
+    sector,
+    fecha,
+    estado,
+    prioridad,
+    fotoUrl: null,
+    lat,
+    lng,
     observacion: estado === 'resuelta' ? 'Reparado por la cuadrilla municipal.' : null,
-    climaTemperatura: null, climaPrecipitacion: null, climaDescripcion: null,
+    climaTemperatura: null,
+    climaPrecipitacion: null,
+    climaDescripcion: null,
   };
   const r = await fetch(`${base}/incidencias`, {
     method: 'POST',
@@ -45,3 +58,4 @@ for (let n = 1; n <= total; n++) {
   });
   console.log(`${n}/${total} ${body.codigo} ${estado} ${prioridad} → HTTP ${r.status}`);
 }
+console.log('Listo. Revisa los datos en el panel de MockAPI.');

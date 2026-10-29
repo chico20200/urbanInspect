@@ -1,13 +1,36 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>seguimiento</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Seguimiento</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">seguimiento</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  @if (loading()) {
+    <div class="centrado"><ion-spinner></ion-spinner></div>
+  } @else if (filas().length === 0) {
+    <div class="centrado">
+      <p>No tienes incidencias en seguimiento.</p>
+      <ion-text color="medium"><p>Márcalas desde el listado o el detalle.</p></ion-text>
+    </div>
+  } @else {
+    @for (f of filas(); track f.marca.id) {
+      @if (f.incidencia) {
+        <app-incidencia-card
+          [incidencia]="f.incidencia"
+          [marcada]="true"
+          (seguimiento)="desmarcar(f.marca)">
+        </app-incidencia-card>
+      } @else {
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              <h2>{{ f.marca.codigo }}</h2>
+              <ion-text color="danger"><p>{{ f.problema }}</p></ion-text>
+            </ion-label>
+            <ion-button slot="end" fill="clear" (click)="desmarcar(f.marca)">Quitar</ion-button>
+          </ion-item>
+        </ion-list>
+      }
+    }
+  }
 </ion-content>

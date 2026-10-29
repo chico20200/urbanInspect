@@ -1,13 +1,51 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>incidencias</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Incidencias</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="nueva()" aria-label="Nueva incidencia">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">incidencias</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refrescar($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading()) {
+    <div class="centrado"><ion-spinner></ion-spinner><p>Consultando incidencias…</p></div>
+  } @else if (error()) {
+    <div class="centrado">
+      <ion-text color="danger"><p>{{ error() }}</p></ion-text>
+      <ion-button (click)="cargarPrimera()">Reintentar</ion-button>
+    </div>
+  } @else if (incidencias().length === 0) {
+    <div class="centrado">
+      <p>No hay incidencias registradas todavía.</p>
+      <ion-button (click)="nueva()">Registrar la primera</ion-button>
+    </div>
+  } @else {
+    @for (i of incidencias(); track i.id) {
+      <app-incidencia-card
+        [incidencia]="i"
+        [marcada]="seguimiento.estaMarcada(i.id)"
+        (seguimiento)="alternarSeguimiento($event)">
+      </app-incidencia-card>
+    }
+    @if (pageError()) {
+      <div class="centrado">
+        <ion-text color="danger"><p>{{ pageError() }}</p></ion-text>
+        <ion-button fill="outline" (click)="reintentarPagina()">Reintentar</ion-button>
+      </div>
+    }
+    @if (!hasMore()) {
+      <p class="centrado"><ion-text color="medium">No hay más incidencias.</ion-text></p>
+    }
+  }
+
+  <ion-infinite-scroll [disabled]="!hasMore() || !!pageError() || loading()" (ionInfinite)="cargarMas($event)">
+    <ion-infinite-scroll-content loadingText="Cargando más…"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
