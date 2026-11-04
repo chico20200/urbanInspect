@@ -1,2 +1,138 @@
 // For information on how to create your own theme, please refer to:
 // https://ionicframework.com/docs/theming/
+// Paleta de UrbanInspect
+// -----------------------------------------------------------------------------
+// Cada color de Ionic necesita 6 variables: el color, su versión RGB, el color
+// del texto encima (contrast), y dos variantes para estados hover/pressed
+// (shade = 12 % más oscuro, tint = 10 % más claro).
+// Docs: https://ionicframework.com/docs/theming/colors
+
+/* ---------- Modo claro (por defecto) ---------- */
+:root {
+  // Azul institucional: barras, botones principales, estado "en proceso"
+  --ion-color-primary: #1d4e89;
+  --ion-color-primary-rgb: 29, 78, 137;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1a4579;
+  --ion-color-primary-tint: #346095;
+  // Amarillo vial: detalles y acentos (como la señalización)
+  --ion-color-secondary: #f4a300;
+  --ion-color-secondary-rgb: 244, 163, 0;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #d78f00;
+  --ion-color-secondary-tint: #f5ac1a;
+  // Verde azulado: acento secundario
+  --ion-color-tertiary: #0f766e;
+  --ion-color-tertiary-rgb: 15, 118, 110;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #0d6861;
+  --ion-color-tertiary-tint: #27847c;
+  // Estados
+  --ion-color-success: #1e7d46;
+  --ion-color-success-rgb: 30, 125, 70;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #1a6e3e;
+  --ion-color-success-tint: #348a58;
+  --ion-color-warning: #e09b00;
+  --ion-color-warning-rgb: 224, 155, 0;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #c58800;
+  --ion-color-warning-tint: #e3a51a;
+  --ion-color-danger: #c62828;
+  --ion-color-danger-rgb: 198, 40, 40;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ae2323;
+  --ion-color-danger-tint: #cc3e3e;
+  // Neutros
+  --ion-color-medium: #6b7280;
+  --ion-color-medium-rgb: 107, 114, 128;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #5e6471;
+  --ion-color-medium-tint: #7a808d;
+  --ion-color-light: #f4f5f8;
+  --ion-color-light-rgb: 244, 245, 248;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-light-tint: #f5f6f9;
+  --ion-color-dark: #1f2933;
+  --ion-color-dark-rgb: 31, 41, 51;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1b242d;
+  --ion-color-dark-tint: #353e47;
+
+  // Fondo general gris muy claro: las tarjetas blancas resaltan al sol
+  --ion-background-color: #f3f5f8;
+  --ion-background-color-rgb: 243, 245, 248;
+  --ion-card-background: #ffffff;
+  --ion-item-background: #ffffff;
+}
+
+/* ---------- Modo oscuro ----------
+   Se activa cuando <html> tiene la clase .ion-palette-dark (la pone TemaService).
+   :root.ion-palette-dark pesa más que :root, así que estos valores ganan. */
+:root.ion-palette-dark {
+  // En oscuro los colores se aclaran para mantener el contraste con el fondo
+  --ion-color-primary: #6ea8ff;
+  --ion-color-primary-rgb: 110, 168, 255;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #6194e0;
+  --ion-color-primary-tint: #7cb1ff;
+  --ion-color-secondary: #ffc23d;
+  --ion-color-secondary-rgb: 255, 194, 61;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #e0ab36;
+  --ion-color-secondary-tint: #ffc850;
+  --ion-color-tertiary: #2dd4bf;
+  --ion-color-tertiary-rgb: 45, 212, 191;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0, 0, 0;
+  --ion-color-tertiary-shade: #28bba8;
+  --ion-color-tertiary-tint: #42d8c5;
+  --ion-color-success: #4ade80;
+  --ion-color-success-rgb: 74, 222, 128;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0, 0, 0;
+  --ion-color-success-shade: #41c371;
+  --ion-color-success-tint: #5ce18d;
+  --ion-color-warning: #fbbf24;
+  --ion-color-warning-rgb: 251, 191, 36;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #dda820;
+  --ion-color-warning-tint: #fbc53a;
+  --ion-color-danger: #ff6b6b;
+  --ion-color-danger-rgb: 255, 107, 107;
+  --ion-color-danger-contrast: #000000;
+  --ion-color-danger-contrast-rgb: 0, 0, 0;
+  --ion-color-danger-shade: #e05e5e;
+  --ion-color-danger-tint: #ff7a7a;
+  --ion-color-medium: #989aa2;
+  --ion-color-medium-rgb: 152, 154, 162;
+  --ion-color-medium-contrast: #000000;
+  --ion-color-medium-contrast-rgb: 0, 0, 0;
+  --ion-color-medium-shade: #86888f;
+  --ion-color-medium-tint: #a2a4ab;
+  --ion-color-light: #222428;
+  --ion-color-light-rgb: 34, 36, 40;
+  --ion-color-light-contrast: #ffffff;
+  --ion-color-light-contrast-rgb: 255, 255, 255;
+  --ion-color-light-shade: #1e2023;
+  --ion-color-light-tint: #383a3e;
+  --ion-color-dark: #f4f5f8;
+  --ion-color-dark-rgb: 244, 245, 248;
+  --ion-color-dark-contrast: #000000;
+  --ion-color-dark-contrast-rgb: 0, 0, 0;
+  --ion-color-dark-shade: #d7d8da;
+  --ion-color-dark-tint: #f5f6f9;
+}

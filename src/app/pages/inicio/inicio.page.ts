@@ -17,16 +17,20 @@ import {
   IonIcon,
   IonSpinner,
   IonText,
+  IonButtons,
+  ActionSheetController,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { addCircleOutline } from 'ionicons/icons';
+import { addCircleOutline, contrastOutline, sunnyOutline, moonOutline } from 'ionicons/icons';
 import { Incidencia } from '../../models/incidencia';
 import { IncidenciasService } from '../../services/incidencias.service';
 import { SeguimientoService } from '../../services/seguimiento.service';
+import { ModoTema, TemaService } from '../../services/tema.service';
 
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
+  styleUrls: ['./inicio.page.scss'],
   standalone: true,
   imports: [
     IonHeader,
@@ -44,12 +48,15 @@ import { SeguimientoService } from '../../services/seguimiento.service';
     IonIcon,
     IonSpinner,
     IonText,
+    IonButtons,
   ],
 })
 export class InicioPage {
   private api = inject(IncidenciasService);
   private seguimiento = inject(SeguimientoService);
   private router = inject(Router);
+  private tema = inject(TemaService);
+  private actionSheets = inject(ActionSheetController);
 
   private todas = signal<Incidencia[]>([]);
   loading = signal(false);
@@ -65,8 +72,18 @@ export class InicioPage {
   );
   enSeguimiento = computed(() => this.seguimiento.marcas().length);
 
+  // Ícono del botón de apariencia según el modo actual
+  iconoTema = computed(() => {
+    const iconos: Record<ModoTema, string> = {
+      sistema: 'contrast-outline',
+      claro: 'sunny-outline',
+      oscuro: 'moon-outline',
+    };
+    return iconos[this.tema.modo()];
+  });
+
   constructor() {
-    addIcons({ addCircleOutline });
+    addIcons({ addCircleOutline, contrastOutline, sunnyOutline, moonOutline });
   }
 
   /** R10: cada vez que se vuelve al inicio, los indicadores se recalculan con datos frescos. */
@@ -81,6 +98,21 @@ export class InicioPage {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  /** Menú para elegir claro, oscuro o el modo del sistema. */
+  async elegirTema(): Promise<void> {
+    const marca = (m: ModoTema) => (this.tema.modo() === m ? ' ✓' : '');
+    const hoja = await this.actionSheets.create({
+      header: 'Apariencia',
+      buttons: [
+        { text: 'Claro' + marca('claro'), icon: 'sunny-outline', handler: () => this.tema.cambiar('claro') },
+        { text: 'Oscuro' + marca('oscuro'), icon: 'moon-outline', handler: () => this.tema.cambiar('oscuro') },
+        { text: 'Igual que el teléfono' + marca('sistema'), icon: 'contrast-outline', handler: () => this.tema.cambiar('sistema') },
+        { text: 'Cancelar', role: 'cancel' },
+      ],
+    });
+    await hoja.present();
   }
 
   nueva(): void {

@@ -33,8 +33,12 @@
  */
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* Modo oscuro por CLASE: se activa cuando <html> tiene .ion-palette-dark.
+   Así lo controla TemaService (sistema / claro / oscuro) en vez del teléfono. */
+@import "@ionic/angular/css/palettes/dark.class.css";
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+
 
 /* Interfaz para trabajo en campo: texto y botones más grandes, alto contraste (R10) */
 :root {
@@ -49,13 +53,22 @@ ion-button {
 ion-item {
   --min-height: 52px;
 }
-.estado-pendiente { --background: var(--ion-color-warning); --color: #000; }
-.estado-en_proceso { --background: var(--ion-color-primary); --color: #fff; }
-.estado-resuelta { --background: var(--ion-color-success); --color: #fff; }
+.estado-pendiente { --background: var(--ion-color-warning); --color: var(--ion-color-warning-contrast); }
+.estado-en_proceso { --background: var(--ion-color-primary); --color: var(--ion-color-primary-contrast); }
+.estado-resuelta { --background: var(--ion-color-success); --color: var(--ion-color-success-contrast); }
 .centrado {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 32px 16px;
+}
+
+/* Logo */
+.logo-toolbar {
+  width: 32px;
+  height: 32px;
+  margin-left: 12px;
+  border-radius: 8px;
+  display: block;
 }

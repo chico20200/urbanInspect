@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="UrbanInspect">
+  <!-- Fondo -->
+  <rect width="128" height="128" rx="28" fill="#1d4e89"/>
+  <!-- Edificios de la ciudad -->
+  <path fill="#ffffff" d="M20 98V60h16v38zM40 98V40h20v58zM64 98V68h14v30z"/>
+  <!-- Ventanas -->
+  <g fill="#1d4e89">
+    <rect x="25" y="66" width="6" height="6" rx="1"/>
+    <rect x="25" y="78" width="6" height="6" rx="1"/>
+    <rect x="45" y="48" width="4" height="6" rx="1"/>
+    <rect x="51" y="48" width="4" height="6" rx="1"/>
+    <rect x="45" y="60" width="4" height="6" rx="1"/>
+    <rect x="51" y="60" width="4" height="6" rx="1"/>
+    <rect x="45" y="72" width="4" height="6" rx="1"/>
+    <rect x="51" y="72" width="4" height="6" rx="1"/>
+  </g>
+  <!-- Calle -->
+  <rect x="16" y="98" width="96" height="7" rx="3.5" fill="#f4a300"/>
+  <!-- Lupa: la inspección -->
+  <circle cx="88" cy="50" r="17" fill="#1d4e89" fill-opacity="0.35" stroke="#f4a300" stroke-width="7"/>
+  <path d="M100 62l12 12" stroke="#f4a300" stroke-width="9" stroke-linecap="round"/>
+</svg>

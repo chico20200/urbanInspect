@@ -8,7 +8,8 @@ import {
   PreloadAllModules,
 } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular';
-
+import { inject, provideAppInitializer } from '@angular/core';
+import { TemaService } from './app/services/tema.service';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
@@ -19,5 +20,6 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules), withComponentInputBinding()),
     provideHttpClient(),
+    provideAppInitializer(() => inject(TemaService).iniciar()),
   ],
 });
