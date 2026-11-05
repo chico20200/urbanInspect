@@ -21,11 +21,12 @@ import {
   ActionSheetController,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { addCircleOutline, contrastOutline, sunnyOutline, moonOutline } from 'ionicons/icons';
+import { addCircleOutline, contrastOutline, sunnyOutline, moonOutline, logOutOutline } from 'ionicons/icons';
 import { Incidencia } from '../../models/incidencia';
 import { IncidenciasService } from '../../services/incidencias.service';
 import { SeguimientoService } from '../../services/seguimiento.service';
 import { ModoTema, TemaService } from '../../services/tema.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-inicio',
@@ -57,6 +58,10 @@ export class InicioPage {
   private router = inject(Router);
   private tema = inject(TemaService);
   private actionSheets = inject(ActionSheetController);
+  private auth = inject(AuthService);
+
+  /** Correo del inspector con sesión iniciada */
+  correo = computed(() => this.auth.usuario()?.email ?? '');
 
   private todas = signal<Incidencia[]>([]);
   loading = signal(false);
@@ -83,7 +88,7 @@ export class InicioPage {
   });
 
   constructor() {
-    addIcons({ addCircleOutline, contrastOutline, sunnyOutline, moonOutline });
+    addIcons({ addCircleOutline, contrastOutline, sunnyOutline, moonOutline, logOutOutline });
   }
 
   /** R10: cada vez que se vuelve al inicio, los indicadores se recalculan con datos frescos. */
@@ -113,6 +118,12 @@ export class InicioPage {
       ],
     });
     await hoja.present();
+  }
+
+  /** Cierra la sesión de Firebase y vuelve al login. */
+  async cerrarSesion(): Promise<void> {
+    await this.auth.salir();
+    await this.router.navigateByUrl('/login', { replaceUrl: true });
   }
 
   nueva(): void {

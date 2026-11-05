@@ -1,7 +1,8 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController, IonApp, IonRouterOutlet } from '@ionic/angular';
 import { BorradorService } from './services/borrador.service';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +14,21 @@ import { BorradorService } from './services/borrador.service';
     </ion-app>
   `,
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   private borradores = inject(BorradorService);
   private alerts = inject(AlertController);
   private router = inject(Router);
+  private auth = inject(AuthService);
 
-  /** R8: al abrir la app, si quedó un registro a medias, se ofrece continuar o descartar. */
-  async ngOnInit(): Promise<void> {
+  constructor() {
+    // Apenas el inspector inicia sesión, se revisa si quedó un borrador pendiente
+    effect(() => {
+      if (this.auth.usuario()) void this.revisarBorrador();
+    });
+  }
+
+  /** R8: al entrar a la app, si quedó un registro a medias, se ofrece continuar o descartar. */
+  private async revisarBorrador(): Promise<void> {
     const b = await this.borradores.obtener();
     if (!b || !this.borradores.tieneContenido(b)) return;
 
